@@ -1,0 +1,52 @@
+header img {
+    height: 80px;
+    margin-left: 40px;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* background-image: url("mountain.jpg"); */
+    background-size: cover;
+}
+
+
+main {
+    color: black;
+}
+
+header {
+    font-family: sans-serif;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 0 25px 0 black;
+}
+
+
+header * {
+    display: inline;
+}
+
+header li {
+    margin: 20px;
+}
+
+header li:hover {
+    margin: 20px;
+    background-color: #7ab3d8;
+    box-shadow: 0 0 25px 0 black;
+    border-radius: 5px;
+}
+
+header li a {
+    color: black;
+    text-decoration: none;
+}
