@@ -41,8 +41,8 @@ header li {
 
 header li:hover {
     margin: 20px;
-    background-color: #7ab3d8;
-    box-shadow: 0 0 25px 0 black;
+    background-color: #bfbcbc;
+    box-shadow: 0 0 25px 0 rgb(95, 95, 95);
     border-radius: 5px;
 }
 
