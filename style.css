@@ -112,6 +112,9 @@ body {
 }
 
 table {
+    overflow-y: scroll;
+    height: 400px;
+    width: 400px;
     table-layout: auto;
     display: flex;
     flex-direction: column;
