@@ -35,3 +35,7 @@ CREATE TABLE Skok (
     id_zgloszenia INTEGER REFERENCES Zgloszenie,
     UNIQUE(numer_serii, id_zgloszenia)
 );
+CREATE TABLE Konto (
+    nazwa_uzytkownika VARCHAR(20) PRIMARY KEY,
+    hash_hasla VARCHAR(256) NOT NULL
+);

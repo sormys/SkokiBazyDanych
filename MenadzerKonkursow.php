@@ -4,23 +4,34 @@
 <head>
     <meta charset="utf-8">
     <title>Menadżer konkursów</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 </head>
 
 <body>
+    <?php
+    session_start();
+    if (!isset($_SESSION['loggedin'])) {
+        header('Location: BrakDostepu.php');
+        exit;
+    }
+    ?>
     <header>
-        <script src="navibar.js"> </script>
+        <script src="loggedNavibar.js"> </script>
     </header>
     <main>
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $lokacja = $_POST['lokacja'];
+            $pattern = "/^\\s+/m";
+            $lokacja = preg_replace($pattern, '', $lokacja);
+            $lokacja = preg_replace('/\s+/', ' ', $lokacja);
+            $lokacja = rtrim($lokacja);
             $termin = $_POST['termin'];
             $conn = pg_connect("host=localhost dbname=bd user=sp438683 password=123");
-            $query = pg_query($conn, "SELECT id_kraju FROM kraj where nazwa Like '$lokacja'");
+            $query = pg_query_params($conn, "SELECT id_kraju FROM kraj where nazwa Like $1", array($lokacja));
             if (!($row = pg_fetch_array($query))) {
                 echo "<script type='text/javascript'>alert('Nie ma takiego kraju, można go dodać w zakładce \"Menadżer Konkursów\"');</script>";
             } else {

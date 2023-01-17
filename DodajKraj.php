@@ -4,15 +4,22 @@
 <head>
     <meta charset="utf-8">
     <title>Menadżer konkursów</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 </head>
 
 <body>
+    <?php
+    session_start();
+    if (!isset($_SESSION['loggedin'])) {
+        header('Location: BrakDostepu.php');
+        exit;
+    }
+    ?>
     <header>
-        <script src="navibar.js"> </script>
+        <script src="loggedNavibar.js"> </script>
     </header>
     <main>
         <?php
@@ -21,12 +28,12 @@
             $pattern = "/^\\s+/m";
             $kraj = preg_replace($pattern, '', $kraj);
             $kraj = preg_replace('/\s+/', ' ', $kraj);
+            $kraj = rtrim($kraj);
             if ($kraj == "") {
                 echo "<script type='text/javascript'>alert('Nie podano kraju');</script>";
             } else {
-                echo "<script type='text/javascript'>alert('$kraj');</script>";
                 $conn = pg_connect("host=localhost dbname=bd user=sp438683 password=123");
-                $query = pg_query($conn, "SELECT id_kraju FROM kraj where nazwa Like '$kraj'");
+                $query = pg_query_params($conn, "SELECT id_kraju FROM kraj where nazwa Like $1", array($kraj));
                 if (!($row = pg_fetch_array($query))) {
                     $query = pg_query($conn, "INSERT INTO kraj(nazwa) VALUES ('$kraj')");
                     echo "<script type='text/javascript'>alert('Dodano kraj');</script>";
