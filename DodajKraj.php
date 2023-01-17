@@ -32,11 +32,8 @@
             if ($kraj == "") {
                 echo "<script type='text/javascript'>alert('Nie podano kraju');</script>";
             } else {
-                $connSTR = "host=" . file_get_contents("host.txt");
-                $connSTR .= " dbname=" . file_get_contents("dbname.txt");
-                $connSTR .= " user=" . file_get_contents("login.txt");
-                $connSTR .= " password=" . file_get_contents("haslo.txt");
-                $conn = pg_connect($connSTR);
+                include 'vars.php';
+                $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
                 $query = pg_query_params($conn, "SELECT id_kraju FROM kraj where nazwa Like $1", array($kraj));
                 if (!($row = pg_fetch_array($query))) {
                     $query = pg_query($conn, "INSERT INTO kraj(nazwa) VALUES ('$kraj')");
@@ -63,11 +60,8 @@
 
         <?php
         //lista Krajów
-        $connSTR = "host=" . file_get_contents("host.txt");
-        $connSTR .= " dbname=" . file_get_contents("dbname.txt");
-        $connSTR .= " user=" . file_get_contents("login.txt");
-        $connSTR .= " password=" . file_get_contents("haslo.txt");
-        $conn = pg_connect($connSTR);
+        include 'vars.php';
+        $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
         $query = pg_query($conn, "SELECT * FROM kraj ");
         echo "<table class='table table-striped table-hover table-bordered'>
 <tr>
