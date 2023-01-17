@@ -3,7 +3,10 @@
 $errorMsg = "";
 $errorOccured = false;
 session_start();
-if (isset($_POST['login']) && isset($_POST['haslo'])) {
+if (isset($_SESSION['loggedin'])) {
+    $errorMsg = "Jesteś już zalogowany";
+    $errorOccured = true;
+} else if (isset($_POST['login']) && isset($_POST['haslo'])) {
     include 'vars.php';
     $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
     if (!$conn) {

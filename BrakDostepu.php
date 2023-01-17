@@ -30,7 +30,7 @@
             <button class="btn" onclick="window.location.href='login.html';">
                 Zaloguj się jako administrator aby uzysać dostęp.
             </button>
-            <button class="btn" onclick="window.location.href='index.html';">
+            <button class="btn" onclick="window.location.href='index.php';">
                 Powrót na stronę główną.
             </button>
         </h2>

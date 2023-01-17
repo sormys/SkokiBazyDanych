@@ -32,8 +32,9 @@
             $termin = $_POST['termin'];
             include 'vars.php';
             $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
+            $query = pg_query_params($conn, "SELECT id_kraju FROM kraj where nazwa Like $1", array($lokacja));
             if (!($row = pg_fetch_array($query))) {
-                echo "<script type='text/javascript'>alert('Nie ma takiego kraju, można go dodać w zakładce \"Menadżer Konkursów\"');</script>";
+                echo "<script type='text/javascript'>alert('Nie ma takiego kraju, można go dodać w zakładce \"Menadżer Krajów\"');</script>";
             } else {
                 $query = pg_query_params($conn, "INSERT INTO konkurs(termin_zgloszen,organizator) 
                     VALUES ($1, $2)", array($termin, $row['id_kraju']));
@@ -65,6 +66,7 @@
         //lista konkursów
         include 'vars.php';
         $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
+        $query = pg_query($conn, "SELECT * FROM konkurs");
         echo "<table>";
         echo "<tr><th>Lokacja</th><th>Termin zgłoszeń</th></tr>";
         while ($row = pg_fetch_array($query)) {
