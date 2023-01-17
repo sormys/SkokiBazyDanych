@@ -21,7 +21,7 @@
                 echo "<script type='text/javascript'>alert('Niepoprawna nazwa użytkownika (Dozwolone są duże i małe litery oraz cyfry od 5 do 31 znaków)');</script>";
             } else {
                 $haslo = $_POST['haslo'];
-                $conn = pg_connect("host=localhost dbname=bd user=" . file_get_contents("login.txt") . " password=" . file_get_contents("haslo.txt"));
+                $conn = pg_connect("host=localhost dbname=" . file_get_contents("host.txt") . " user=" . file_get_contents("login.txt") . " password=" . file_get_contents("haslo.txt"));
                 $query = pg_query_params($conn, "SELECT nazwa_uzytkownika FROM Konto where nazwa_uzytkownika Like $1", array($login));
                 if (!($row = pg_fetch_array($query))) {
                     $query = pg_query_params($conn, "INSERT INTO Konto(nazwa_uzytkownika, hash_hasla) VALUES ($1, $2)", array($login, crypt($haslo)));
@@ -54,7 +54,7 @@
 
         <?php
         //lista uzytkownikow i haseł
-        $conn = pg_connect("host=localhost dbname=bd user=" . file_get_contents("login.txt") . " password=" . file_get_contents("haslo.txt"));
+        $conn = pg_connect("host=localhost dbname=" . file_get_contents("host.txt") . " user=" . file_get_contents("login.txt") . " password=" . file_get_contents("haslo.txt"));
         $query = pg_query($conn, "SELECT nazwa_uzytkownika, hash_hasla FROM Konto");
         echo "<table>";
         echo "<tr><th>login</th><th>haslo</th></tr>";

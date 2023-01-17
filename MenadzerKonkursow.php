@@ -30,7 +30,7 @@
             $lokacja = preg_replace('/\s+/', ' ', $lokacja);
             $lokacja = rtrim($lokacja);
             $termin = $_POST['termin'];
-            $conn = pg_connect("host=localhost dbname=bd user=" . file_get_contents("login.txt") . " password=" . file_get_contents("haslo.txt"));
+            $conn = pg_connect("host=localhost dbname=" . file_get_contents("host.txt") . " user=" . file_get_contents("login.txt") . " password=" . file_get_contents("haslo.txt"));
             $query = pg_query_params($conn, "SELECT id_kraju FROM kraj where nazwa Like $1", array($lokacja));
             if (!($row = pg_fetch_array($query))) {
                 echo "<script type='text/javascript'>alert('Nie ma takiego kraju, można go dodać w zakładce \"Menadżer Konkursów\"');</script>";
@@ -63,7 +63,7 @@
 
         <?php
         //lista konkursów
-        $conn = pg_connect("host=localhost dbname=bd user=" . file_get_contents("login.txt") . " password=" . file_get_contents("haslo.txt"));
+        $conn = pg_connect("host=localhost dbname=" . file_get_contents("host.txt") . " user=" . file_get_contents("login.txt") . " password=" . file_get_contents("haslo.txt"));
         $query = pg_query($conn, "SELECT * FROM konkurs");
         echo "<table>";
         echo "<tr><th>Lokacja</th><th>Termin zgłoszeń</th></tr>";

@@ -38,7 +38,7 @@
             if ($imie == "" || $nazwisko == "" || $kraj == "") {
                 echo "<script type='text/javascript'>alert('Wypełnij wszystkie pola!');</script>";
             } else {
-                $conn = pg_connect("host=localhost dbname=bd user=" . file_get_contents("login.txt") . " password=" . file_get_contents("haslo.txt"));
+                $conn = pg_connect("host=localhost dbname=" . file_get_contents("host.txt") . " user=" . file_get_contents("login.txt") . " password=" . file_get_contents("haslo.txt"));
                 $query = pg_query_params($conn, "SELECT id_kraju FROM kraj where nazwa Like $1", array($kraj));
                 if (!($row = pg_fetch_array($query))) {
                     echo "<script type='text/javascript'>alert('Nie ma takiego kraju, można go dodać w zakładce \"Menadżer Konkursów\"');</script>";
@@ -82,7 +82,7 @@
 
         <?php
         //lista zawodników
-        $conn = pg_connect("host=localhost dbname=bd user=" . file_get_contents("login.txt") . " password=" . file_get_contents("haslo.txt"));
+        $conn = pg_connect("host=localhost dbname=" . file_get_contents("host.txt") . " user=" . file_get_contents("login.txt") . " password=" . file_get_contents("haslo.txt"));
         $query = pg_query($conn, "SELECT * FROM zawodnik");
         echo "<table class='table table-striped table-hover'>";
         echo "<tr>";
