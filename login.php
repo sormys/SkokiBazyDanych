@@ -4,7 +4,7 @@ $errorMsg = "";
 $errorOccured = false;
 session_start();
 if (isset($_POST['login']) && isset($_POST['haslo'])) {
-    $conn = pg_connect("host=localhost dbname=bd user=sp438683 password=123");
+    $conn = pg_connect("host=localhost dbname=bd user=" . file_get_contents("login.txt") . " password=" . file_get_contents("haslo.txt"));
     if (!$conn) {
         $errorMsg = "Nie udało się połączyć z bazą danych";
         $errorOccured = true;
