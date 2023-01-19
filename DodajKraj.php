@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<!-- <head>
     <meta charset="utf-8">
     <title>Menadżer konkursów</title>
     <link rel="stylesheet" href="css/style.css">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-</head>
+</head> -->
+<script src='header.js'></script>
 
 <body>
     <?php
@@ -17,20 +18,22 @@
         header('Location: BrakDostepu.php');
         exit;
     }
+    include 'loggedNavibar.php';
     ?>
-    <header>
+
+    <!-- <header>
         <script src="loggedNavibar.js"> </script>
-    </header>
+    </header> -->
     <main>
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $kraj = $_POST['kraj'];
-            $pattern = "/^\\s+/m";
-            $kraj = preg_replace($pattern, '', $kraj);
-            $kraj = preg_replace('/\s+/', ' ', $kraj);
-            $kraj = rtrim($kraj);
+            include 'regexChange.php';
+            $kraj = regexChange($kraj);
             if ($kraj == "") {
                 echo "<script type='text/javascript'>alert('Nie podano kraju');</script>";
+            } else if (strlen($kraj) > $kraj_dlugosc) {
+                echo "<script type='text/javascript'>alert('Nazwa kraju jest za długa! (Dozwolone jest maksymalnie " . $kraj_dlugosc . " znaków)');</script>";
             } else {
                 include 'vars.php';
                 $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);

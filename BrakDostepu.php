@@ -2,14 +2,15 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<!-- <head>
     <meta charset="utf-8">
     <title>Brak Dostepu</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <link rel="stylesheet" href="css/BrakDostepu.css">
-</head>
+</head> -->
+<script src='header.js'></script>
 
 <body>
     <?php
@@ -18,10 +19,14 @@
         header('Location: index.html');
         exit;
     }
+    include 'navibar.php';
     ?>
-    <header>
+
+
+
+    <!-- <header>
         <script src="navibar.js"> </script>
-    </header>
+    </header> -->
     <main>
         <div>
         </div>

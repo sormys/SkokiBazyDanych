@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<!-- <head>
     <meta charset="utf-8">
     <title>Menadżer konkursów</title>
     <link rel="stylesheet" href="css/style.css">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-</head>
+</head> -->
+<script src='header.js'></script>
 
 <body>
-    <script src="navibar.js"> </script>
+    <?php include 'loggedNavibar.php' ?>
+    <!-- <script src="navibar.js"> </script> -->
     <main>
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $login = $_POST['login'];
             $pattern = '/^[A-Za-z][A-Za-z0-9]{3,31}$/';
             if (!preg_match($pattern, $login)) {
-                echo "<script type='text/javascript'>alert('Niepoprawna nazwa użytkownika (Dozwolone są duże i małe litery oraz cyfry od 5 do 31 znaków)');</script>";
+                echo "<script type='text/javascript'>alert('Niepoprawna nazwa użytkownika (Dozwolone są duże i małe litery oraz cyfry od 3 do 31 znaków)');</script>";
             } else {
                 $haslo = $_POST['haslo'];
                 include 'vars.php';

@@ -10,16 +10,18 @@
     <link rel="stylesheet" href="css/styleIndex.css">
 
 </head>
-
+<!-- <script src='header.js'></script> -->
 
 <body>
     <?php
     // $navbar = "navibar.js";
     session_start();
     if (isset($_SESSION['loggedin'])) {
-        echo "<script src=\"loggedNavibar.js\"></script>";
+        include 'loggedNavibar.php';
+        // echo "<script src=\"loggedNavibar.js\"></script>";
     } else {
-        echo "<script src=\"navibar.js\"></script>";
+        include 'navibar.php';
+        // echo "<script src=\"navibar.js\"></script>";
     }
     ?>
     <main>

@@ -1,23 +1,22 @@
-<!-- basic html file -->
 <!DOCTYPE html>
 <html>
 
-<head>
+<!-- <head>
     <meta charset="utf-8">
     <title>Brak Dostepu</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <link rel="stylesheet" href="css/BrakDostepu.css">
-</head>
+</head> -->
+<script src='header.js'></script>
 
 <body>
     <?php
     session_start();
     if (isset($_SESSION['loggedin'])) {
-        // last request was more than 30 minutes ago
-        session_unset(); // unset $_SESSION variable for the run-time 
-        session_destroy(); // destroy session data in storage
+        session_unset();
+        session_destroy();
     }
     ?>
     <main>

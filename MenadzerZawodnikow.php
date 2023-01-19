@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<!-- <head>
     <meta charset="utf-8">
     <title>Menadżer konkursów</title>
     <link rel="stylesheet" href="css/style.css">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-</head>
+</head> -->
+<script src='header.js'></script>
 
 <body>
     <?php
@@ -17,32 +18,31 @@
         header('Location: BrakDostepu.php');
         exit;
     }
+    include 'loggedNavibar.php';
     ?>
-    <header>
+    <!-- <header>
         <script src="loggedNavibar.js"> </script>
-    </header>
+    </header> -->
     <main>
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            include 'regexChange.php';
             $kraj = $_POST['kraj'];
-            $pattern = "/^\\s+/m";
-            $kraj = preg_replace($pattern, '', $kraj);
-            $kraj = preg_replace('/\s+/', ' ', $kraj);
-            $kraj = trim($kraj);
+            $kraj = regexChange($kraj);
             $imie = $_POST['imie'];
-            $imie = preg_replace('/\s+/', '', $imie);
-            $imie = rtrim($imie);
+            $imie = regexChange($imie);
             $nazwisko = $_POST['nazwisko'];
-            $nazwisko = preg_replace('/\s+/', '', $nazwisko);
-            $nazwisko = rtrim($nazwisko);
+            $nazwisko = regexChange($nazwisko);
             if ($imie == "" || $nazwisko == "" || $kraj == "") {
                 echo "<script type='text/javascript'>alert('Wypełnij wszystkie pola!');</script>";
+            } else if (strlen($imie) > $imie_dlugosc || strlen($nazwisko) > $nazwisko_dlugosc) {
+                echo "<script type='text/javascript'>alert('Imię/nazwisko jest za długie! (Dozowolone jest maksymalnie " . $imie_dlugosc . "/" . $nazwisko_dlugosc . " znaków)');</script>";
             } else {
                 include 'vars.php';
                 $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
                 $query = pg_query_params($conn, "SELECT id_kraju FROM kraj where nazwa Like $1", array($kraj));
                 if (!($row = pg_fetch_array($query))) {
-                    echo "<script type='text/javascript'>alert('Nie ma takiego kraju, można go dodać w zakładce \"Menadżer Konkursów\"');</script>";
+                    echo "<script type='text/javascript'>alert('Błąd danych w bazie!');</script>";
                 } else {
                     $query = pg_query_params(
                         $conn,
@@ -60,11 +60,21 @@
         <form class="login-form" method="post">
             <h1>Dodaj Zawodnika:</h1>
             <div class="form-input-material">
-                <label for="kraj">Kraj (wymagane)</label>
-                <div></div>
-                <input type="text" name="kraj" placeholder=" " autocomplete="off" class="form-control-material"
-                    required />
+                <label for="kraj">Kraj:</label>
+                <select name="kraj" id="kraj">
+                    <option value="" disabled selected hidden>Wybierz kraj</option>
+                    <?php
+                    include 'vars.php';
+                    $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
+                    $query = pg_query($conn, "SELECT nazwa FROM kraj");
+                    while ($row = pg_fetch_array($query)) {
+                        echo "<option value='" . $row['nazwa'] . "'>" . $row['nazwa'] . "</option>";
+                    }
+                    pg_close($conn);
+                    ?>
+                </select>
             </div>
+
             <div class="form-input-material">
                 <label for="imie">Imie</label>
                 <div></div>
