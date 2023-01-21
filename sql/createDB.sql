@@ -44,18 +44,3 @@ CREATE TABLE Konto (
     nazwa_uzytkownika VARCHAR(20) PRIMARY KEY,
     hash_hasla VARCHAR(256) NOT NULL
 );
-SELECT s.id_zgloszenia
-from skok s
-    join zgloszenie zg on s.id_zgloszenia = zg.id_zgloszenia
-where zg.id_konkursu = 3
-    and (s.odleglosc + s.ocena) in (
-        SELECT s.odleglosc + s.ocena
-        from skok s
-            join zgloszenie zg on zg.id_zgloszenia = s.id_zgloszenia
-        where s.numer_serii = $1
-            and zg.id_konkursu = 3
-            and s.zdyskwalifikowany <> true
-        ORDER BY s.odlegosc + s.ocena DESC
-        limit 30
-    )
-ORDER BY s.odleglosc + s.ocena asc
