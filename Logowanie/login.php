@@ -7,7 +7,7 @@ if (isset($_SESSION['loggedin'])) {
     $errorMsg = "Jesteś już zalogowany";
     $errorOccured = true;
 } else if (isset($_POST['login']) && isset($_POST['haslo'])) {
-    include 'vars.php';
+    include '../PHP/vars.php';
     $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
     if (!$conn) {
         $errorMsg = "Nie udało się połączyć z bazą danych";
@@ -18,8 +18,7 @@ if (isset($_SESSION['loggedin'])) {
         if (password_verify($_POST['haslo'], $row['hash_hasla'])) {
             $_SESSION['login'] = $_POST['login'];
             $_SESSION['loggedin'] = true;
-            echo "Zalogowano jako " + $_SESSION['login'] + "!";
-            header("Location: MenadzerZawodnikow.php");
+            header("Location: ../Menadzer/MenadzerZawodnikow.php");
 
         } else {
             $errorMsg = "Niepoprawne hasło!";
@@ -38,5 +37,5 @@ if (!$errorOccured) {
 }
 ?>
 <script type='text/javascript'> var msg = "<?= $errorMsg ?>";</script>";
-<script src=loginError.js></script>
+<script src='/~sp438683/BD/loginError.js'></script>
 <?php session_abort(); ?>

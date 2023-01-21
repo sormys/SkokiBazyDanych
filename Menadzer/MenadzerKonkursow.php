@@ -1,32 +1,21 @@
 <!DOCTYPE html>
 <html>
 
-<!-- <head>
-    <meta charset="utf-8">
-    <title>Menadżer konkursów</title>
-    <link rel="stylesheet" href="css/style.css">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-</head> -->
-<script src='header.js'></script>
+<script src='/~sp438683/BD/JS/header.js'></script>
 
 <body>
     <?php
     session_start();
     if (!isset($_SESSION['loggedin'])) {
-        header('Location: BrakDostepu.php');
+        header('Location: /~sp438683/BD/Logowanie/BrakDostepu.php');
         exit;
     }
-    include 'loggedNavibar.php';
+    echo "<script src='/~sp438683/BD/JS/loggedNavibar.js'></script>";
     ?>
-    <!-- <header>
-        <script src="loggedNavibar.js"> </script>
-    </header> -->
     <main>
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            include 'regexChange.php';
+            include '../PHP/regexChange.php';
             $lokacja = $_POST['kraj'];
             $lokacja = regexChange($lokacja);
             $termin = $_POST['termin'];
@@ -39,36 +28,39 @@
                 echo "<script type='text/javascript'>alert('Nazwa konkursu jest za długa! (maskymalna długość to 40 znaków)');</script>";
                 header("Refresh:0; url=MenadzerKonkursow.php");
             } else {
-                include 'vars.php';
+                include '../PHP/vars.php';
                 $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
                 if (!$conn) {
                     echo "<script type='text/javascript'>alert('Nie udało się połączyć z bazą danych');</script>";
-                    header("Refresh:0; url=MenadzerKonkursow.php");
-                }
-                $query = pg_query_params($conn, "SELECT id_konkursu FROM konkurs where nazwa Like $1", array($nazwa));
-                if (pg_num_rows($query) > 0) {
-                    echo "<script type='text/javascript'>alert('Konkurs o takiej nazwie już istnieje.');</script>";
-                    header("Refresh:0; url=MenadzerKonkursow.php");
-                }
-                $query = pg_query_params($conn, "SELECT id_kraju FROM kraj where nazwa Like $1", array($lokacja));
-                if (!($row = pg_fetch_array($query))) {
-                    echo "<script type='text/javascript'>alert('Musisz wybrać jeden z podanych krajów.');</script>";
                 } else {
-                    $query = pg_query_params($conn, "INSERT INTO konkurs(nazwa,termin_zgloszen,organizator) 
-                    VALUES ($1, $2, $3)", array($nazwa, $termin, $row['id_kraju']));
-                    echo "<script type='text/javascript'>alert('Dodano konkurs');</script>";
-                    $query = pg_query($conn, "SELECT id_konkursu FROM konkurs ORDER BY id_konkursu DESC limit 1");
-                    $row = pg_fetch_array($query);
-                    $i = $row['id_konkursu'];
-                    $query = pg_query($conn, "SELECT id_kraju FROM kraj");
-                    while ($row = pg_fetch_array($query)) {
-                        if (
-                            !pg_query_params($conn, "INSERT INTO kwotastartowa(id_konkursu, id_kraju, kwota_startowa) 
+
+                    $query = pg_query_params($conn, "SELECT id_konkursu FROM konkurs where nazwa Like $1", array($nazwa));
+                    if (pg_num_rows($query) > 0) {
+                        echo "<script type='text/javascript'>alert('Konkurs o takiej nazwie już istnieje.');</script>";
+                    } else {
+
+                        $query = pg_query_params($conn, "SELECT id_kraju FROM kraj where nazwa Like $1", array($lokacja));
+                        if (!($row = pg_fetch_array($query))) {
+                            echo "<script type='text/javascript'>alert('Musisz wybrać jeden z podanych krajów.');</script>";
+                        } else {
+                            $query = pg_query_params($conn, "INSERT INTO konkurs(nazwa,termin_zgloszen,organizator, status_konkursu) 
+                    VALUES ($1, $2, $3, $4)", array($nazwa, $termin, $row['id_kraju'], 'zgloszenia'));
+                            if ($query)
+                                echo "<script type='text/javascript'>alert('Dodano konkurs');</script>";
+                            $query = pg_query($conn, "SELECT id_konkursu FROM konkurs ORDER BY id_konkursu DESC limit 1");
+                            $row = pg_fetch_array($query);
+                            $i = $row['id_konkursu'];
+                            $query = pg_query($conn, "SELECT id_kraju FROM kraj");
+                            while ($row = pg_fetch_array($query)) {
+                                if (
+                                    !pg_query_params($conn, "INSERT INTO kwotastartowa(id_konkursu, id_kraju, kwota_startowa) 
                     VALUES ($1, $2, $3)", array($i, $row['id_kraju'], $_POST['kraj' . $row['id_kraju']]))
-                        ) {
-                            echo "<script type='text/javascript'>console.log('nie udało sie dodać kwoty startowej!!!');</script>";
+                                ) {
+                                    echo "<script type='text/javascript'>console.log('nie udało sie dodać kwoty startowej!!!');</script>";
+                                }
+                                echo "<script type='text/javascript'>console.log(" . $row['id_kraju'] . ")</script>";
+                            }
                         }
-                        echo "<script type='text/javascript'>console.log(" . $row['id_kraju'] . ")</script>";
                     }
                 }
                 pg_close($conn);
@@ -76,7 +68,7 @@
         }
 
         ?>
-
+        <h1>Menadzer Konkursów:</h1>
         <form class="login-form" method="post">
             <h1>Dodaj Konkurs:</h1>
             <div class="form-input-material">
@@ -85,7 +77,7 @@
                     <select name="kraj" id="kraj">
                         <option value="" disabled selected hidden>Wybierz kraj</option>
                         <?php
-                        include 'vars.php';
+                        include '../PHP/vars.php';
                         $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
                         $query = pg_query($conn, "SELECT nazwa FROM kraj");
                         while ($row = pg_fetch_array($query)) {
@@ -126,7 +118,7 @@
 
         <?php
         //lista konkursów
-        include 'vars.php';
+        include '../PHP/vars.php';
         $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
         $query = pg_query($conn, "SELECT * FROM konkurs");
         echo "<table>";

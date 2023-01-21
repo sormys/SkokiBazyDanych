@@ -1,41 +1,30 @@
 <!DOCTYPE html>
 <html>
 
-<!-- <head>
-    <meta charset="utf-8">
-    <title>Menadżer konkursów</title>
-    <link rel="stylesheet" href="css/style.css">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-</head> -->
-<script src='header.js'></script>
+<script src='/~sp438683/BD/JS/header.js'></script>
 
 <body>
     <?php
     session_start();
     if (!isset($_SESSION['loggedin'])) {
-        header('Location: BrakDostepu.php');
+        header('Location: /~sp438683/BD/Logowanie/BrakDostepu.php');
         exit;
     }
-    include 'loggedNavibar.php';
+    echo "<script src='/~sp438683/BD/JS/loggedNavibar.js'></script>";
     ?>
 
-    <!-- <header>
-        <script src="loggedNavibar.js"> </script>
-    </header> -->
     <main>
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $kraj = $_POST['kraj'];
-            include 'regexChange.php';
+            include '../PHP/regexChange.php';
             $kraj = regexChange($kraj);
             if ($kraj == "") {
                 echo "<script type='text/javascript'>alert('Nie podano kraju');</script>";
             } else if (strlen($kraj) > $kraj_dlugosc) {
                 echo "<script type='text/javascript'>alert('Nazwa kraju jest za długa! (Dozwolone jest maksymalnie " . $kraj_dlugosc . " znaków)');</script>";
             } else {
-                include 'vars.php';
+                include '../PHP/vars.php';
                 $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
                 $query = pg_query_params($conn, "SELECT id_kraju FROM kraj where nazwa Like $1", array($kraj));
                 if (!($row = pg_fetch_array($query))) {
@@ -63,7 +52,7 @@
 
         <?php
         //lista Krajów
-        include 'vars.php';
+        include '../PHP/vars.php';
         $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
         $query = pg_query($conn, "SELECT * FROM kraj ");
         echo "<table class='table table-striped table-hover table-bordered'>

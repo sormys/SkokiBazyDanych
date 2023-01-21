@@ -1,19 +1,10 @@
 <!DOCTYPE html>
 <html>
 
-<!-- <head>
-    <meta charset="utf-8">
-    <title>Menadżer konkursów</title>
-    <link rel="stylesheet" href="css/style.css">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-</head> -->
-<script src='header.js'></script>
+<script src='/~sp438683/BD/JS/header.js'></script>
 
 <body>
-    <?php include 'loggedNavibar.php' ?>
-    <!-- <script src="navibar.js"> </script> -->
+    <script src='/~sp438683/BD/JS/navibar.js'></script>
     <main>
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -23,7 +14,7 @@
                 echo "<script type='text/javascript'>alert('Niepoprawna nazwa użytkownika (Dozwolone są duże i małe litery oraz cyfry od 3 do 31 znaków)');</script>";
             } else {
                 $haslo = $_POST['haslo'];
-                include 'vars.php';
+                include '../PHP/vars.php';
                 $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
                 $query = pg_query_params($conn, "SELECT nazwa_uzytkownika FROM Konto where nazwa_uzytkownika Like $1", array($login));
                 if (!($row = pg_fetch_array($query))) {

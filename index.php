@@ -7,26 +7,23 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <link rel="stylesheet" href="css/styleIndex.css">
+    <link rel="stylesheet" href="/~sp438683/BD/css/styleIndex.css">
 
 </head>
-<!-- <script src='header.js'></script> -->
 
 <body>
     <?php
-    // $navbar = "navibar.js";
+
     session_start();
     if (isset($_SESSION['loggedin'])) {
-        include 'loggedNavibar.php';
-        // echo "<script src=\"loggedNavibar.js\"></script>";
+        echo "<script src='/~sp438683/BD/JS/loggedNavibar.js'></script>";
     } else {
-        include 'navibar.php';
-        // echo "<script src=\"navibar.js\"></script>";
+        echo "<script src='/~sp438683/BD/JS/navibar.js'></script>";
     }
     ?>
     <main>
         <h1>Strona do baz danych (wip). </h1>
-        <h2> <a href="Skoki_BazaDanych.txt"> Link do bazy w sql.</a> </h2>
+        <h2> <a href="/~sp438683/BD/Skoki_BazaDanych.txt"> Link do bazy w sql.</a> </h2>
         <img src="diagram.svg" alt="Diagram zadania skoki">
     </main>
 </body>
