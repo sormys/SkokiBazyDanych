@@ -14,5 +14,8 @@ $kraj_dlugosc = 20;
 $login_dlugosc = 20;
 $nazwa_konkurs_dlugosc = 40;
 // $debug_date = date("Y-m-d", time());
-$debug_date = "2023-03-01";
+if (isset($_SESSION['debug_date']))
+    $debug_date = $_SESSION['debug_date'];
+else
+    $debug_date = date("Y-m-d", time());
 ?>
