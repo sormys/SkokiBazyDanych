@@ -9,6 +9,7 @@ document.write('\
         <li><a href="/~sp438683/BD/Menadzer/ZglosZawodnika.php">Zgłoś Zawodnika</a></li>\
         <li><a href="/~sp438683/BD/Menadzer/DodajSkoki.php">Dodaj skok</a></li>\
         <li><a href="/~sp438683/BD/Menadzer/RozpocznijKonkurs.php">Rozpocznij Konkurs</a></li>\
+        <li><a href="/~sp438683/BD/Widz/ZapisSkokow.php">Wyniki konkursow </a></li>\
         <li><a href="/~sp438683/BD/Logowanie/logout.php">Wyloguj </a></li>\
     </ul>\
 </nav>\

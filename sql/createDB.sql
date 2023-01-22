@@ -1,4 +1,5 @@
 Create TYPE statusK as ENUM ('zgloszenia', 'rozpoczety', 'skoki', 'wyniki');
+create TYPE rodzajSerii as ENUM('kwalifikacyjna', 'pierwsza', 'druga');
 CREATE TABLE Kraj (
     id_kraju SERIAL PRIMARY KEY,
     nazwa VARCHAR(20) NOT NULL
@@ -34,11 +35,11 @@ CREATE TABLE Skok (
     id_skoku SERIAL PRIMARY KEY,
     odleglosc NUMERIC(6),
     ocena NUMERIC(6),
-    numer_serii NUMERIC(6) NOT NULL,
+    seria rodzajSerii NOT NULL,
     zdyskwalifikowany BOOLEAN NOT NULL,
     id_zgloszenia INTEGER REFERENCES Zgloszenie,
     numer_startowy NUMERIC(6) NOT NULL,
-    UNIQUE(numer_serii, id_zgloszenia)
+    UNIQUE(seria, id_zgloszenia)
 );
 CREATE TABLE Konto (
     nazwa_uzytkownika VARCHAR(20) PRIMARY KEY,

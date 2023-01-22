@@ -62,12 +62,13 @@
 
                                     }
                                     shuffle($myArray);
+                                    $seria = $it > 50 ? "kwalifikacyjna" : "pierwsza";
                                     for ($i = 0; $i < $liczbaZawodnikow; $i++) {
                                         //dodaj do tabeli skok skok z numerem startowym i numerem serii =1 i numerem zawodnika
                                         $query = pg_query_params(
                                             $conn,
-                                            "INSERT INTO skok (numer_startowy, numer_serii, id_zgloszenia, zdyskwalifikowany) VALUES ($1, $2, $3, $4)",
-                                            array($i + 1, 1, $myArray[$i], 0)
+                                            "INSERT INTO skok (numer_startowy, seria, id_zgloszenia, zdyskwalifikowany) VALUES ($1, $2, $3, $4)",
+                                            array($i + 1, $seria, $myArray[$i], 0)
                                         );
                                     }
                                     echo "<script type='text/javascript'>alert('Rozpoczęto konkurs');</script>";

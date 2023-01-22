@@ -67,21 +67,21 @@
 
                         $query = pg_query_params($conn, "SELECT id_zawodnika from zgloszenie where id_konkursu = $1", array($id_konkursu));
                         $liczbaZawodnikow = pg_num_rows($query);
-                        $CzyKwalifikacyjna = $liczbaZawodnikow > 50;
 
-                        $numerSerii = 1;
+                        $seria = "kwalifikacyjna";
                         $query = pg_query_params($conn, "SELECT id_skoku from skok s join zgloszenie zg on zg.id_zgloszenia = s.id_zgloszenia
-                where zg.id_konkursu = $1 and s.numer_serii =$2 and ocena is NULL", array($id_konkursu, $numerSerii));
+                where zg.id_konkursu = $1 and s.seria =$2 and ocena is NULL", array($id_konkursu, $seria));
 
-                        if (pg_num_rows($query) == 0) { //pierwsza seria zakonczona
-                            $numerSerii++;
+                        if (pg_num_rows($query) == 0) { //kwalifikacyjna zakończona lub jej nie było
+                            $seria = "pierwsza";
                             $query = pg_query_params($conn, "SELECT id_skoku from skok s join zgloszenie zg on zg.id_zgloszenia = s.id_zgloszenia
-                where zg.id_konkursu = $1 and s.numer_serii =$2 and ocena is NULL", array($id_konkursu, $numerSerii));
-                            if (pg_num_rows($query) == 0) { //druga seria zakonczona, TO MOZE NASTAPIC TYLKO JEZELI BYLA KWALIFIKACYJNA
-                                if ($CzyKwalifikacyjna) {
-                                    $numerSerii++;
-                                } else {
-                                    echo "<script type='text/javascript'>alert('Wystąpił błąd.');</script>";
+                where zg.id_konkursu = $1 and s.seria =$2 and ocena is NULL", array($id_konkursu, $seria));
+                            if (pg_num_rows($query) == 0) { //pierwsza seria zakończona
+                                $seria = "druga";
+                                $query = pg_query_params($conn, "SELECT id_skoku from skok s join zgloszenie zg on zg.id_zgloszenia = s.id_zgloszenia
+                where zg.id_konkursu = $1 and s.seria =$2 and ocena is NULL", array($id_konkursu, $seria));
+                                if (pg_num_rows($query) == 0) { //druga seria zakończona
+                                    echo "<script type='text/javascript'>alert('Konkurs zakończony.');</script>";
                                     exit;
                                 }
                             }
@@ -91,42 +91,29 @@
                             $conn,
                             "SELECT s.id_zgloszenia from skok s
                         left join zgloszenie zg on zg.id_zgloszenia = s.id_zgloszenia
-                        where zg.id_konkursu = $1 and s.numer_serii = $2
+                        where zg.id_konkursu = $1 and s.seria = $2
                         and s.ocena is NULL ORDER BY s.numer_startowy ASC limit 1",
-                            array($id_konkursu, $numerSerii)
+                            array($id_konkursu, $seria)
                         ); // nastepny skoczek
                         if (!($row = pg_fetch_row($query))) {
                             echo "<script type='text/javascript'>alert('Wystąpił błąd. (nie ma już skoczków w tej serii)');</script>";
                             exit;
                         } else {
                             $id_zgloszenia = $row[0];
-                            $tmpNumerSerii = $numerSerii + ($CzyKwalifikacyjna ? 0 : 1);
-                            $nazwaSerii = "";
-                            switch ($tmpNumerSerii) {
-                                case 1:
-                                    $nazwaSerii = "kwalifikacyjna";
-                                    break;
-                                case 2:
-                                    $nazwaSerii = "pierwsza";
-                                    break;
-                                case 3:
-                                    $nazwaSerii = "druga";
-                                    break;
-                            }
                             $query = pg_query_params($conn, "SELECT imie, nazwisko from zawodnik join zgloszenie on zgloszenie.id_zawodnika = zawodnik.id_zawodnika where id_zgloszenia = $1", array($id_zgloszenia));
                             $row = pg_fetch_row($query);
 
                             echo "<form class='login-form' method='post'>";
-                            echo "<h1>(Obecnie trwa seria " . $nazwaSerii . ")</h1>";
+                            echo "<h1>(Obecnie trwa seria " . $seria . ")</h1>";
                             echo "<h1>(Skacze zawodnik: " . $row[0] . " " . $row[1] . ")</h1>";
                             echo "<h2>Dodaj skok zawodnika:</h2>";
                             echo "<div class='form-input-material'>";
                             echo "<div>";
                             echo "<input type='hidden' name='id_konkursu' value='" . $id_konkursu . "'>";
-                            echo "<input type='hidden' name='numerSerii' value='" . $numerSerii . "'>";
+                            echo "<input type='hidden' name='seria' value='" . $seria . "'>";
                             echo "<input type='hidden' name='zawodnik' value='" . $id_zgloszenia . "'>";
                             echo "<label for='odleglosc'>Odleglosc:</label>";
-                            echo "<input type='number' name='odleglosc' id='odleglosc' placeholder='Odleglosc' min='0' max='1000' required>";
+                            echo "<input type='number' step='0.01' name='odleglosc' id='odleglosc' placeholder='Odleglosc' min='0' max='1000' required>";
                             echo "</div><div>";
                             echo "<label for='ocena'>Ocena:</label>";
                             echo "<input type='number' name='ocena' id='ocena' placeholder='Ocena' min='0' max='100' required>";
@@ -153,7 +140,7 @@
             } else {
 
                 $id_konkursu = $_POST['id_konkursu'];
-                $numerSerii = $_POST['numerSerii'];
+                $seria = $_POST['seria'];
                 $id_zgloszenia = $_POST['zawodnik'];
                 $odleglosc = $_POST['odleglosc'];
                 $ocena = $_POST['ocena'];
@@ -164,40 +151,41 @@
                     $ocena = 0;
                 }
                 $dyskwalifikacja = isset($_POST['dyskwalifikacja']) && $_POST['dyskwalifikacja'] == '1' ? 1 : 0;
-                $query = pg_query_params($conn, "UPDATE skok SET odleglosc = $1, ocena = $2, zdyskwalifikowany = $3 WHERE id_zgloszenia = $4 and numer_serii = $5", array($odleglosc, $ocena, $dyskwalifikacja, $id_zgloszenia, $numerSerii));
+                $query = pg_query_params($conn, "UPDATE skok SET odleglosc = $1, ocena = $2, zdyskwalifikowany = $3 WHERE id_zgloszenia = $4 and seria = $5", array($odleglosc, $ocena, $dyskwalifikacja, $id_zgloszenia, $seria));
                 echo "<script type='text/javascript'>alert('Skok dodany.');</script>";
-                // $query = pg_query_params($conn, "INSERT INTO skok (id_zgloszenia, numer_serii, odleglosc, ocena, zdyskwalifikowany) VALUES ($1, $2, $3, $4, $5)", array($id_zgloszenia, $numerSerii, $odleglosc, $ocena, $dyskwalifikacja));
                 if (!$query) {
                     echo "<script type='text/javascript'>alert('Nie udało się dodać skoku.');</script>";
                 } else {
                     // jezeli to nie jest ostatnia seria, a skoczył ostatni zawodnik w serii, to zwiększ numer serii i dodaj puste skoki nastepna serie
                     $query = pg_query_params($conn, "SELECT count(s.id_skoku) from skok s join zgloszenie zg on s.id_zgloszenia = zg.id_zgloszenia
-                     where s.numer_serii = $1 and zg.id_konkursu = $2 and ocena is NULL", array($numerSerii, $id_konkursu));
+                     where s.seria = $1 and zg.id_konkursu = $2 and ocena is NULL", array($seria, $id_konkursu));
                     $row = pg_fetch_row($query);
                     if ($row[0] == 0) { // jest to ostatni skok w serii
                         $lZawodnikow = pg_query_params($conn, "SELECT count(*) from zgloszenie where id_konkursu = $1", array($id_konkursu));
                         $row = pg_fetch_row($lZawodnikow);
-                        $cKwalifikacyjna = $row[0] > 50;
                         echo "<script type='text/javascript'>alert('Ostatni skok w serii.');</script>";
-                        if ($numerSerii < 2 + ($cKwalifikacyjna ? 1 : 0)) {
-                            // $liczbaMiejsc = $cKwalifikacyjna ? ($numerSerii == 1 ? 50 : 30) : 30;
+                        if ($seria != "druga") {
                             $awansowali = pg_query_params(
                                 $conn,
                                 "SELECT s.id_zgloszenia from skok s 
                              join zgloszenie zg on s.id_zgloszenia = zg.id_zgloszenia
                               where zg.id_konkursu = $2 and (s.odleglosc + s.ocena) in 
                               (SELECT s.odleglosc + s.ocena from skok s join zgloszenie zg on zg.id_zgloszenia = s.id_zgloszenia 
-                                 where s.numer_serii = $1 and zg.id_konkursu = $2 
+                                 where s.seria = $1 and zg.id_konkursu = $2 
                                  and s.zdyskwalifikowany <> true 
                                  ORDER BY s.odleglosc + s.ocena DESC
                                  limit $3) 
                              ORDER BY s.odleglosc + s.ocena asc",
-                                array($numerSerii, $id_konkursu, ($CzyKwalifikacyjna && ($numerSerii == 1)) ? 50 : 30)
+                                array($seria, $id_konkursu, ($seria == "kwalifikacyjna") ? 50 : 30)
                             );
-                            $numerSerii++;
+                            if ($seria == "pierwsza") {
+                                $seria = "druga";
+                            } else {
+                                $seria = "pierwsza";
+                            }
                             $numerStartowy = 1;
                             while ($row = pg_fetch_row($awansowali)) {
-                                $query = pg_query_params($conn, "INSERT INTO skok (id_zgloszenia, numer_serii, zdyskwalifikowany, numer_startowy) VALUES ($1, $2, $3, $4)", array($row[0], $numerSerii, 0, $numerStartowy++));
+                                $query = pg_query_params($conn, "INSERT INTO skok (id_zgloszenia, seria, zdyskwalifikowany, numer_startowy) VALUES ($1, $2, $3, $4)", array($row[0], $seria, 0, $numerStartowy++));
                             }
                             echo "<script type='text/javascript'>console.log('Nowa seria skoków została uzupełniona.');</script>";
                         } else {
