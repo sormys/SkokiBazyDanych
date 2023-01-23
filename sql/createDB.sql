@@ -45,3 +45,27 @@ CREATE TABLE Konto (
     nazwa_uzytkownika VARCHAR(20) PRIMARY KEY,
     hash_hasla VARCHAR(256) NOT NULL
 );
+CREATE OR REPLACE FUNCTION czyKwalifikacyjna(id_konkurusu INTEGER) RETURNS BOOLEAN AS $$
+DECLARE countT INTEGER;
+BEGIN
+select count(*) into countT
+from zgloszenie
+where id_konkursu = NEW.id_konkursu;
+if countT > 50 then return true;
+else return false;
+end if;
+END;
+$$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION sprawdzZgloszenie() RETURNS TRIGGER AS $$
+DECLARE statusT statusK;
+BEGIN
+select status_konkursu into statusT
+from konkurs
+where id_konkursu = NEW.id_konkursu;
+if statusT <> 'zgloszenia' then Raise exception 'Ten konkurs nie przyjmuje juz zgloszen!';
+end if;
+return NEW;
+END;
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER pilnujZgloszen BEFORE
+INSERT ON zgloszenie FOR EACH ROW EXECUTE PROCEDURE sprawdzZgloszenie();
