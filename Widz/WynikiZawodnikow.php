@@ -49,7 +49,7 @@
 
                 $query = pg_query_params($conn, "SELECT distinct id_skoku from skok s join zgloszenie zg on zg.id_zgloszenia = s.id_zgloszenia where zg.id_zawodnika = $1", array($id_zawodnika));
                 if (pg_num_rows($query) == 0) {
-                    "<h1>Ten zawodnik jeszcze nigdy nie skakał</h1>";
+                    echo "<h1>Ten zawodnik jeszcze nigdy nie skakał</h1>";
                 } else {
                     // wypisz przyciski pozawalające wybrać tryb sortowania;
                     echo "<h1>Sortuj według:</h1>";
