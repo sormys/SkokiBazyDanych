@@ -91,7 +91,6 @@
         echo "<th>Imie</th>";
         echo "<th>Nazwisko</th>";
         echo "<th>Kraj</th>";
-        echo "<th>Punkty</th>";
         echo "</tr>";
         while ($row = pg_fetch_array($query)) {
             echo "<tr>";
@@ -100,7 +99,6 @@
             $query2 = pg_query_params($conn, "SELECT nazwa FROM kraj where id_kraju = $1", array($row['id_kraju']));
             $row2 = pg_fetch_array($query2);
             echo "<td>" . $row2['nazwa'] . "</td>";
-            echo "<td>" . $row['punkty'] . "</td>";
             echo "</tr>";
         }
         echo "</table>";

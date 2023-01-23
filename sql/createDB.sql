@@ -16,8 +16,7 @@ CREATE TABLE Zawodnik (
     id_zawodnika SERIAL PRIMARY KEY,
     imie VARCHAR(20) NOT NULL,
     nazwisko VARCHAR(20) NOT NULL,
-    id_kraju INTEGER NOT NULL REFERENCES Kraj,
-    punkty NUMERIC(6)
+    id_kraju INTEGER NOT NULL REFERENCES Kraj
 );
 CREATE TABLE KwotaStartowa (
     id_kwoty SERIAL PRIMARY KEY,
