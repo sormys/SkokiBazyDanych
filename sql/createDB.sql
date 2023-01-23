@@ -44,12 +44,12 @@ CREATE TABLE Konto (
     nazwa_uzytkownika VARCHAR(20) PRIMARY KEY,
     hash_hasla VARCHAR(256) NOT NULL
 );
-CREATE OR REPLACE FUNCTION czyKwalifikacyjna(id_konkurusu INTEGER) RETURNS BOOLEAN AS $$
+CREATE OR REPLACE FUNCTION czyKwalifikacyjna(id_k INTEGER) RETURNS BOOLEAN AS $$
 DECLARE countT INTEGER;
 BEGIN
 select count(*) into countT
 from zgloszenie
-where id_konkursu = NEW.id_konkursu;
+where id_konkursu = id_k;
 if countT > 50 then return true;
 else return false;
 end if;

@@ -37,5 +37,5 @@ if (!$errorOccured) {
 }
 ?>
 <script type='text/javascript'> var msg = "<?= $errorMsg ?>";</script>";
-<script src='/~sp438683/BD/loginError.js'></script>
+<script src='/~sp438683/BD/Logowanie/loginError.js'></script>
 <?php session_abort(); ?>
