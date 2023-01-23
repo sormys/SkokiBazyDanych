@@ -68,7 +68,7 @@
                         <?php
                         include '../PHP/vars.php';
                         $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
-                        $query = pg_query_params($conn, "SELECT nazwa, id_konkursu FROM konkurs where termin_zgloszen >= $1", array($debug_date));
+                        $query = pg_query_params($conn, "SELECT nazwa, id_konkursu FROM konkurs where termin_zgloszen >= $1 and status_konkursu = 'zgloszenia'", array($debug_date));
                         while ($row = pg_fetch_array($query)) {
                             if (isset($_GET['konkurs']) && $_GET['konkurs'] == $row['id_konkursu']) {
                                 echo "<option value='" . $row['id_konkursu'] . "' selected>" . $row['nazwa'] . "</option>";
