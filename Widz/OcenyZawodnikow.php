@@ -21,9 +21,9 @@
             echo "<script type='text/javascript'>alert('Nie udało się połączyć z bazą danych');</script>";
         } else {
             // wypisz wszystkich zawodnikach wraz z sumą ich ocen
-            $query = pg_query($conn, "SELECT z.imie, z.nazwisko, COALESCE(sum(s.ocena),0) as suma_ocen 
+            $query = pg_query($conn, "SELECT z.imie, z.nazwisko, COALESCE(sum(s.ocena), 0) as suma_ocen 
             from zawodnik z, zgloszenie zg, skok s where z.id_zawodnika = zg.id_zawodnika and zg.id_zgloszenia = s.id_zgloszenia
-            where s.ocena is not NULL
+            and s.ocena is not NULL
             group by z.imie, z.nazwisko order by suma_ocen desc");
             if (!$query) {
                 echo "<h1> Nie ma żadnych zawodników </h1>";
