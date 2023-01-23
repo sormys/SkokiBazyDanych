@@ -66,28 +66,28 @@
                                 case 'odleglosc':
                                     $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
                                         from skok s, zgloszenie zg, konkurs ko, kraj k where s.id_zgloszenia = zg.id_zgloszenia and zg.id_konkursu = ko.id_konkursu and ko.organizator = k.id_kraju
-                                        and zg.id_zawodnika = $1 ORDER BY s.odleglosc DESC", array($id_zawodnika));
+                                        and zg.id_zawodnika = $1 and ocena is not NULL ORDER BY s.odleglosc DESC", array($id_zawodnika));
                                     break;
                                 case 'ocena':
                                     $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
                                         from skok s, zgloszenie zg, konkurs ko, kraj k where s.id_zgloszenia = zg.id_zgloszenia and zg.id_konkursu = ko.id_konkursu and ko.organizator = k.id_kraju
-                                        and zg.id_zawodnika = $1 ORDER BY s.ocena DESC", array($id_zawodnika));
+                                        and zg.id_zawodnika = $1 and ocena is not NULL ORDER BY s.ocena DESC", array($id_zawodnika));
                                     break;
                                 case 'numer_startowy':
                                     $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
                                         from skok s, zgloszenie zg, konkurs ko, kraj k where s.id_zgloszenia = zg.id_zgloszenia and zg.id_konkursu = ko.id_konkursu and ko.organizator = k.id_kraju
-                                        and zg.id_zawodnika = $1 ORDER BY s.numer_startowy ASC", array($id_zawodnika));
+                                        and zg.id_zawodnika = $1 and ocena is not NULL ORDER BY s.numer_startowy ASC", array($id_zawodnika));
                                     break;
                                 case 'konkurs':
                                     $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
                                         from skok s, zgloszenie zg, konkurs ko, kraj k where s.id_zgloszenia = zg.id_zgloszenia and zg.id_konkursu = ko.id_konkursu and ko.organizator = k.id_kraju
-                                        and zg.id_zawodnika = $1 ORDER BY ko.nazwa DESC", array($id_zawodnika));
+                                        and zg.id_zawodnika = $1 and ocena is not NULL ORDER BY ko.nazwa DESC", array($id_zawodnika));
                                     break;
                             }
                         } else {
                             $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
                                         from skok s, zgloszenie zg, konkurs ko, kraj k where s.id_zgloszenia = zg.id_zgloszenia and zg.id_konkursu = ko.id_konkursu and ko.organizator = k.id_kraju
-                                        and zg.id_zawodnika = $1", array($id_zawodnika));
+                                        and zg.id_zawodnika = $1 and ocena is not NULL", array($id_zawodnika));
                         }
                         echo "<table class='table table-striped table-hover'>";
                         echo "<tr>";
@@ -102,7 +102,7 @@
                             echo "<tr>";
                             echo "<td>" . $row2[4] . "</td>";
                             echo "<td>" . $row2[1] . "</td>";
-                            echo "<td>" . $row2[0] . "</td>";
+                            echo "<td>" . ($row2[3] == 'f' ? $row2[0] : "DSQ") . "</td>";
                             echo "<td>" . $row2[2] . "</td>";
                             echo "<td>" . $row2[5] . "</td>";
                             echo "<td>" . $row2[6] . "</td>";

@@ -67,38 +67,40 @@
                         echo "</form>";
                         while ($row = pg_fetch_row($query)) {
                             // wypisz tabele skokow w danej serii w danym konkursie
-                            echo "<h1>Seria: " . $row[0] . "</h1>";
+                            $helpQuery = pg_query_params($conn, "SELECT id_skoku from skok join zgloszenie on zgloszenie.id_zgloszenia = skok.id_zgloszenia where zgloszenie.id_konkursu = $1 and skok.seria = $2 and ocena is NULL", array($id_konkursu, $row[0]));
+                            $czyTrwa = pg_num_rows($helpQuery) == 0 ? " (w toku)" : "";
+                            echo "<h1>Seria: " . $row[0] . $czyTrwa . "</h1>";
                             if (isset($_GET['sort'])) {
                                 switch ($_GET['sort']) {
                                     case 'odleglosc':
                                         $query2 = pg_query_params($conn, "SELECT z.imie, z.nazwisko, s.odleglosc, s.ocena, s.zdyskwalifikowany, s.numer_startowy
                             from skok s, zgloszenie zg, zawodnik z where s.id_zgloszenia = zg.id_zgloszenia and zg.id_zawodnika = z.id_zawodnika
-                            and zg.id_konkursu = $1 and s.seria = $2 ORDER BY s.odleglosc DESC", array($id_konkursu, $row[0]));
+                            and zg.id_konkursu = $1 and s.seria = $2 and s.ocena is not NULL ORDER BY s.odleglosc DESC", array($id_konkursu, $row[0]));
                                         $sortowanie = "s.odleglosc DESC";
                                         break;
                                     case 'ocena':
                                         $query2 = pg_query_params($conn, "SELECT z.imie, z.nazwisko, s.odleglosc, s.ocena, s.zdyskwalifikowany, s.numer_startowy 
                             from skok s, zgloszenie zg, zawodnik z where s.id_zgloszenia = zg.id_zgloszenia and zg.id_zawodnika = z.id_zawodnika
-                            and zg.id_konkursu = $1 and s.seria = $2 ORDER BY s.ocena DESC", array($id_konkursu, $row[0]));
+                            and zg.id_konkursu = $1 and s.seria = $2 and s.ocena is not NULL ORDER BY s.ocena DESC", array($id_konkursu, $row[0]));
                                         $sortowanie = "s.ocena DESC";
                                         break;
                                     case 'numer_startowy':
                                         $query2 = pg_query_params($conn, "SELECT z.imie, z.nazwisko, s.odleglosc, s.ocena, s.zdyskwalifikowany, s.numer_startowy
                             from skok s, zgloszenie zg, zawodnik z where s.id_zgloszenia = zg.id_zgloszenia and zg.id_zawodnika = z.id_zawodnika
-                            and zg.id_konkursu = $1 and s.seria = $2 ORDER BY s.numer_startowy", array($id_konkursu, $row[0]));
+                            and zg.id_konkursu = $1 and s.seria = $2 and s.ocena is not NULL ORDER BY s.numer_startowy", array($id_konkursu, $row[0]));
                                         $sortowanie = "s.numer_startowy";
                                         break;
                                     case 'imieNazwisko':
                                         $query2 = pg_query_params($conn, "SELECT z.imie, z.nazwisko, s.odleglosc, s.ocena, s.zdyskwalifikowany, s.numer_startowy
                             from skok s, zgloszenie zg, zawodnik z where s.id_zgloszenia = zg.id_zgloszenia and zg.id_zawodnika = z.id_zawodnika
-                            and zg.id_konkursu = $1 and s.seria = $2 ORDER BY z.imie, z.nazwisko", array($id_konkursu, $row[0]));
+                            and zg.id_konkursu = $1 and s.seria = $2 and s.ocena is not NULL ORDER BY z.imie, z.nazwisko", array($id_konkursu, $row[0]));
                                         $sortowanie = "z.imie, z.nazwisko";
                                         break;
                                 }
                             } else {
                                 $query2 = pg_query_params($conn, "SELECT z.imie, z.nazwisko, s.odleglosc, s.ocena, s.zdyskwalifikowany, s.numer_startowy 
                             from skok s, zgloszenie zg, zawodnik z where s.id_zgloszenia = zg.id_zgloszenia and zg.id_zawodnika = z.id_zawodnika
-                            and zg.id_konkursu = $1 and s.seria = $2", array($id_konkursu, $row[0]));
+                            and zg.id_konkursu = $1 and s.seria = $2 and s.ocena is not NULL", array($id_konkursu, $row[0]));
                             }
                             echo "<table class='table table-striped table-hover'>";
                             echo "<tr>";
@@ -112,7 +114,7 @@
                                 echo "<tr>";
                                 echo "<td>" . $row2[0] . "</td>";
                                 echo "<td>" . $row2[1] . "</td>";
-                                echo "<td>" . ($row2[4] == 'f' ? $row2[2] : "DSF") . "</td>";
+                                echo "<td>" . ($row2[4] == 'f' ? $row2[2] : "DSQ") . "</td>";
                                 echo "<td>" . $row2[3] . "</td>";
                                 echo "<td>" . $row2[5] . "</td>";
                                 echo "</tr>";
