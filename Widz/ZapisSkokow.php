@@ -68,7 +68,7 @@
                         while ($row = pg_fetch_row($query)) {
                             // wypisz tabele skokow w danej serii w danym konkursie
                             $helpQuery = pg_query_params($conn, "SELECT id_skoku from skok join zgloszenie on zgloszenie.id_zgloszenia = skok.id_zgloszenia where zgloszenie.id_konkursu = $1 and skok.seria = $2 and ocena is NULL", array($id_konkursu, $row[0]));
-                            $czyTrwa = pg_num_rows($helpQuery) == 0 ? " (w toku)" : "";
+                            $czyTrwa = pg_num_rows($helpQuery) != 0 ? " (w toku)" : "";
                             echo "<h1>Seria: " . $row[0] . $czyTrwa . "</h1>";
                             if (isset($_GET['sort'])) {
                                 switch ($_GET['sort']) {
