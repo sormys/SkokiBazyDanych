@@ -47,71 +47,71 @@
                 echo "<script type='text/javascript'>alert('Nie udało się połączyć z bazą danych');</script>";
             } else {
 
-                $query = pg_query_params($conn, "SELECT distinct id_skoku from skok s join zgloszenie zg on zg.id_zgloszenia = s.id_zgloszenia where zg.id_zawodnika = $1", array($id_zawodnika));
+                $query = pg_query_params($conn, "SELECT distinct id_skoku from skok s join zgloszenie zg on zg.id_zgloszenia = s.id_zgloszenia where zg.id_zawodnika = $1 and s.ocena is not NULL", array($id_zawodnika));
                 if (pg_num_rows($query) == 0) {
                     echo "<h1>Ten zawodnik jeszcze nigdy nie skakał</h1>";
                 } else {
                     // wypisz przyciski pozawalające wybrać tryb sortowania;
                     echo "<h1>Sortuj według:</h1>";
-                    echo "<form class='login-form' method='get'>";
+                    echo "<form  method='get'>";
                     echo "<input type='hidden' name='zawodnik' value='" . $id_zawodnika . "'>";
                     echo "<button type='submit' class='btn btn-primary btn-ghost' name='sort' value='odleglosc'>Odleglosci</button>";
                     echo "<button type='submit' class='btn btn-primary btn-ghost' name='sort' value='ocena'>Oceny</button>";
                     echo "<button type='submit' class='btn btn-primary btn-ghost' name='sort' value='numer_startowy'>Numeru startowego</button>";
                     echo "<button type='submit' class='btn btn-primary btn-ghost' name='sort' value='konkurs'>Nazwy konkursu</button>";
                     echo "</form>";
-                    while ($row = pg_fetch_row($query)) {
-                        if (isset($_GET['sort'])) {
-                            switch ($_GET['sort']) {
-                                case 'odleglosc':
-                                    $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
+
+                    if (isset($_GET['sort'])) {
+                        switch ($_GET['sort']) {
+                            case 'odleglosc':
+                                $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
                                         from skok s, zgloszenie zg, konkurs ko, kraj k where s.id_zgloszenia = zg.id_zgloszenia and zg.id_konkursu = ko.id_konkursu and ko.organizator = k.id_kraju
                                         and zg.id_zawodnika = $1 and ocena is not NULL ORDER BY s.odleglosc DESC", array($id_zawodnika));
-                                    break;
-                                case 'ocena':
-                                    $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
+                                break;
+                            case 'ocena':
+                                $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
                                         from skok s, zgloszenie zg, konkurs ko, kraj k where s.id_zgloszenia = zg.id_zgloszenia and zg.id_konkursu = ko.id_konkursu and ko.organizator = k.id_kraju
                                         and zg.id_zawodnika = $1 and ocena is not NULL ORDER BY s.ocena DESC", array($id_zawodnika));
-                                    break;
-                                case 'numer_startowy':
-                                    $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
+                                break;
+                            case 'numer_startowy':
+                                $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
                                         from skok s, zgloszenie zg, konkurs ko, kraj k where s.id_zgloszenia = zg.id_zgloszenia and zg.id_konkursu = ko.id_konkursu and ko.organizator = k.id_kraju
                                         and zg.id_zawodnika = $1 and ocena is not NULL ORDER BY s.numer_startowy ASC", array($id_zawodnika));
-                                    break;
-                                case 'konkurs':
-                                    $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
+                                break;
+                            case 'konkurs':
+                                $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
                                         from skok s, zgloszenie zg, konkurs ko, kraj k where s.id_zgloszenia = zg.id_zgloszenia and zg.id_konkursu = ko.id_konkursu and ko.organizator = k.id_kraju
                                         and zg.id_zawodnika = $1 and ocena is not NULL ORDER BY ko.nazwa DESC", array($id_zawodnika));
-                                    break;
-                            }
-                        } else {
-                            $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
+                                break;
+                        }
+                    } else {
+                        $query2 = pg_query_params($conn, "SELECT s.odleglosc, s.seria, s.ocena, s.zdyskwalifikowany, s.numer_startowy, ko.nazwa, k.nazwa organizator
                                         from skok s, zgloszenie zg, konkurs ko, kraj k where s.id_zgloszenia = zg.id_zgloszenia and zg.id_konkursu = ko.id_konkursu and ko.organizator = k.id_kraju
                                         and zg.id_zawodnika = $1 and ocena is not NULL", array($id_zawodnika));
-                        }
-                        echo "<table class='table table-striped table-hover'>";
-                        echo "<tr>";
-                        echo "<th>Numer startowy</th>";
-                        echo "<th>Seria</th>";
-                        echo "<th>Odleglosc</th>";
-                        echo "<th>Ocena</th>";
-                        echo "<th>Nazwa Konkursu</th>";
-                        echo "<th>Organizator Konkursu</th>";
-                        echo "</tr>";
-                        while ($row2 = pg_fetch_row($query2)) {
-                            echo "<tr>";
-                            echo "<td>" . $row2[4] . "</td>";
-                            echo "<td>" . $row2[1] . "</td>";
-                            echo "<td>" . ($row2[3] == 'f' ? $row2[0] : "DSQ") . "</td>";
-                            echo "<td>" . $row2[2] . "</td>";
-                            echo "<td>" . $row2[5] . "</td>";
-                            echo "<td>" . $row2[6] . "</td>";
-                            echo "</tr>";
-                        }
-                        echo "</table>";
-
-
                     }
+                    echo "<table class='table table-striped table-hover'>";
+                    echo "<tr>";
+                    echo "<th>Numer startowy</th>";
+                    echo "<th>Seria</th>";
+                    echo "<th>Odleglosc</th>";
+                    echo "<th>Ocena</th>";
+                    echo "<th>Nazwa Konkursu</th>";
+                    echo "<th>Organizator Konkursu</th>";
+                    echo "</tr>";
+                    while ($row2 = pg_fetch_row($query2)) {
+                        echo "<tr>";
+                        echo "<td>" . $row2[4] . "</td>";
+                        echo "<td>" . $row2[1] . "</td>";
+                        echo "<td>" . ($row2[3] == 'f' ? $row2[0] : "DSQ") . "</td>";
+                        echo "<td>" . $row2[2] . "</td>";
+                        echo "<td>" . $row2[5] . "</td>";
+                        echo "<td>" . $row2[6] . "</td>";
+                        echo "</tr>";
+                    }
+                    echo "</table>";
+
+
+
                 }
 
                 pg_close($conn);
