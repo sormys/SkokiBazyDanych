@@ -169,13 +169,13 @@
                                 $conn,
                                 "SELECT s.id_zgloszenia from skok s 
                              join zgloszenie zg on s.id_zgloszenia = zg.id_zgloszenia
-                              where zg.id_konkursu = $2 and (s.odleglosc + s.ocena) in 
-                              (SELECT s.odleglosc + s.ocena from skok s join zgloszenie zg on zg.id_zgloszenia = s.id_zgloszenia 
+                              where zg.id_konkursu = $2 and s.ocena in 
+                              (SELECT s.ocena from skok s join zgloszenie zg on zg.id_zgloszenia = s.id_zgloszenia 
                                  where s.seria = $1 and zg.id_konkursu = $2 
                                  and s.zdyskwalifikowany <> true 
-                                 ORDER BY s.odleglosc + s.ocena DESC
+                                 ORDER BY s.ocena DESC
                                  limit $3) 
-                             ORDER BY s.odleglosc + s.ocena asc",
+                             ORDER BY s.ocena asc",
                                 array($seria, $id_konkursu, ($seria == "kwalifikacyjna") ? 50 : 30)
                             );
                             if ($seria == "pierwsza") {
