@@ -7,7 +7,7 @@
     <?php
     session_start();
     if (!isset($_SESSION['loggedin'])) {
-        echo "<script src='/~sp438683/BD/JS/navbar.js'></script>";
+        echo "<script src='/~sp438683/BD/JS/navibar.js'></script>";
     } else {
         echo "<script src='/~sp438683/BD/JS/loggedNavibar.js'></script>";
     }
