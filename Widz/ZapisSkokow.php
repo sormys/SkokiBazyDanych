@@ -53,7 +53,7 @@
                 } else {
                     $query = pg_query_params($conn, "SELECT distinct s.seria from skok s join zgloszenie zg on zg.id_zgloszenia = s.id_zgloszenia where zg.id_konkursu = $1", array($id_konkursu));
                     if (pg_num_rows($query) == 0) {
-                        "<h1>Do tego konkursu nikt się nie zgłosił :(</h1>";
+                        echo "<h1>Do tego konkursu nikt się nie zgłosił :(</h1>";
                     } else {
                         // wypisz przyciski pozawalające wybrać tryb sortowania;
                         echo "<h1>Sortuj według:</h1>";
