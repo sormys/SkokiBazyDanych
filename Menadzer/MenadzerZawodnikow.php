@@ -36,7 +36,7 @@
                 } else {
                     $query = pg_query_params(
                         $conn,
-                        "INSERT INTO zawodnik (imie, nazwisko, id_kraju, punkty) VALUES ($1, $2, $3, $4)",
+                        "INSERT INTO zawodnik (imie, nazwisko, id_kraju) VALUES ($1, $2, $3)",
                         array($imie, $nazwisko, $row['id_kraju'], 0)
                     );
                     echo "<script type='text/javascript'>alert('Dodano Zawodnika');</script>";
@@ -56,11 +56,16 @@
                     <?php
                     include '../PHP/vars.php';
                     $conn = pg_connect("host=" . $db_host . " dbname=" . $db_name . " user=" . $db_user . " password=" . $db_password);
-                    $query = pg_query($conn, "SELECT nazwa FROM kraj");
-                    while ($row = pg_fetch_array($query)) {
-                        echo "<option value='" . $row['nazwa'] . "'>" . $row['nazwa'] . "</option>";
+                    if (!$conn) {
+                        echo "Nie udało się połączyć z bazą danych";
+                    } else {
+
+                        $query = pg_query($conn, "SELECT nazwa FROM kraj");
+                        while ($row = pg_fetch_array($query)) {
+                            echo "<option value='" . $row['nazwa'] . "'>" . $row['nazwa'] . "</option>";
+                        }
+                        pg_close($conn);
                     }
-                    pg_close($conn);
                     ?>
                 </select>
             </div>
