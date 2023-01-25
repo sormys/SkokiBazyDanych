@@ -116,7 +116,7 @@
                             echo "<input type='number' step='0.01' name='odleglosc' id='odleglosc' placeholder='Odleglosc' min='0' max='1000' required>";
                             echo "</div><div>";
                             echo "<label for='ocena'>Ocena:</label>";
-                            echo "<input type='number' name='ocena' id='ocena' placeholder='Ocena' min='0' max='100' required>";
+                            echo "<input type='number' name='ocena' id='ocena' placeholder='Ocena' min='0' max='1000' required>";
                             echo "</div><div>";
                             echo "<label for='dyskwalifikacja'>Dyskwalifikowany:</label>";
                             echo "<input type='checkbox' name='dyskwalifikacja' id='dyskwalifikacja' value='1'>";
@@ -165,6 +165,9 @@
                         $row = pg_fetch_row($lZawodnikow);
                         echo "<script type='text/javascript'>alert('Ostatni skok w serii.');</script>";
                         if ($seria != "druga") {
+                            $usun = "";
+                            if ($seria == "kwalifikacyjna")
+                                $usun = "and s.zdyskwalifikowany <> true ";
                             $awansowali = pg_query_params(
                                 $conn,
                                 "SELECT s.id_zgloszenia from skok s 
@@ -172,7 +175,7 @@
                               where zg.id_konkursu = $2 and s.ocena in 
                               (SELECT s.ocena from skok s join zgloszenie zg on zg.id_zgloszenia = s.id_zgloszenia 
                                  where s.seria = $1 and zg.id_konkursu = $2 
-                                 and s.zdyskwalifikowany <> true 
+                                 " . $usun . "
                                  ORDER BY s.ocena DESC
                                  limit $3) 
                              ORDER BY s.ocena asc",
