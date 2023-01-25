@@ -37,7 +37,7 @@
                     $query = pg_query_params(
                         $conn,
                         "INSERT INTO zawodnik (imie, nazwisko, id_kraju) VALUES ($1, $2, $3)",
-                        array($imie, $nazwisko, $row['id_kraju'], 0)
+                        array($imie, $nazwisko, $row['id_kraju'])
                     );
                     echo "<script type='text/javascript'>alert('Dodano Zawodnika');</script>";
                 }
