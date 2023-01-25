@@ -39,6 +39,9 @@
                         "INSERT INTO zawodnik (imie, nazwisko, id_kraju) VALUES ($1, $2, $3)",
                         array($imie, $nazwisko, $row['id_kraju'])
                     );
+                    if (!$query) {
+                        echo "<script type='text/javascript'>alert('Błąd danych w bazie!');</script>";
+                    }
                     echo "<script type='text/javascript'>alert('Dodano Zawodnika');</script>";
                 }
                 pg_close($conn);
