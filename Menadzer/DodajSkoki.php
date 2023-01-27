@@ -116,7 +116,7 @@
                             echo "<input type='number' step='0.01' name='odleglosc' id='odleglosc' placeholder='Odleglosc' min='0' max='1000' required>";
                             echo "</div><div>";
                             echo "<label for='ocena'>Ocena:</label>";
-                            echo "<input type='number' name='ocena' id='ocena' placeholder='Ocena' min='0' max='1000' required>";
+                            echo "<input type='number' step='0.01' name='ocena' id='ocena' placeholder='Ocena' min='0' max='1000' required>";
                             echo "</div><div>";
                             echo "<label for='dyskwalifikacja'>Dyskwalifikowany:</label>";
                             echo "<input type='checkbox' name='dyskwalifikacja' id='dyskwalifikacja' value='1'>";
