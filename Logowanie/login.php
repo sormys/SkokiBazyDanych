@@ -1,4 +1,3 @@
-<!-- check parameters login and haslo with data in table accounts -->
 <?php
 $errorMsg = "";
 $errorOccured = false;

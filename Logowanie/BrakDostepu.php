@@ -1,4 +1,3 @@
-<!-- basic html file -->
 <!DOCTYPE html>
 <html>
 

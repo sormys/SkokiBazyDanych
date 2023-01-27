@@ -50,9 +50,6 @@
                 echo "<script type='text/javascript'>alert('Nie udało się połączyć z bazą danych');</script>";
                 header('Refresh: 0; URL=/~sp438683/BD/Menadzer/DodajSkoki.php');
             } else {
-
-                // TODO: sprawdzać w jakiś sposób czy przypadkiem konkurs sie już nie zakończył
-                // $query = pg_query_params($conn, "SELECT id_konkursu FROM konkurs where nazwa Like $1", array($konkurs));
                 if ($konkurs == "") {
                     echo "<script type='text/javascript'>alert('Musisz wybrać jeden z podanych konkursów.');</script>";
                     header('Refresh: 0; URL=/~sp438683/BD/Menadzer/DodajSkoki.php');
