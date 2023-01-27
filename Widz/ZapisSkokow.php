@@ -56,7 +56,7 @@
                         echo "<h1>Do tego konkursu nikt się nie zgłosił :(</h1>";
                     } else {
                         // wypisz przyciski pozawalające wybrać tryb sortowania;
-                        echo "<h1>Sortuj według:</h1>";
+                        echo "<h1>Sortuj wyniki w seriach według:</h1>";
                         echo "<form method='get'>";
                         echo "<input type='hidden' name='konkurs' value='" . $id_konkursu . "'>";
                         echo "<button type='submit' class='btn btn-primary btn-ghost' name='sort' value='odleglosc'>Odleglosci</button>";
@@ -117,6 +117,27 @@
                                 echo "<td>" . ($row2[4] == 'f' ? $row2[2] : "DSQ") . "</td>";
                                 echo "<td>" . $row2[3] . "</td>";
                                 echo "<td>" . $row2[5] . "</td>";
+                                echo "</tr>";
+                            }
+                            echo "</table>";
+                        }
+                        // wypisz klasyfikacje
+                        $query = pg_query_params($conn, "SELECT z.imie, z.nazwisko, sum(s.ocena) as suma
+                        from skok s, zgloszenie zg, zawodnik z where s.id_zgloszenia = zg.id_zgloszenia and zg.id_zawodnika = z.id_zawodnika
+                        and zg.id_konkursu = $1 and (s.seria = 'pierwsza' or s.seria = 'druga') and s.ocena is not NULL group by id_zgloszenia order by suma", array($id_konkursu));
+                        if (pg_num_rows($query) > 0) {
+                            echo "<h2>Klasyfikacje</h2>";
+                            echo "<table class='table table-striped table-hover'>";
+                            echo "<tr>";
+                            echo "<th>Imie</th>";
+                            echo "<th>Nazwisko</th>";
+                            echo "<th>Suma</th>";
+                            echo "</tr>";
+                            while ($row = pg_fetch_row($query)) {
+                                echo "<tr>";
+                                echo "<td>" . $row[0] . "</td>";
+                                echo "<td>" . $row[1] . "</td>";
+                                echo "<td>" . $row[2] . "</td>";
                                 echo "</tr>";
                             }
                             echo "</table>";
