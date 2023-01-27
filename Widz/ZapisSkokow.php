@@ -124,7 +124,7 @@
                         // wypisz klasyfikacje
                         $query = pg_query_params($conn, "SELECT z.imie, z.nazwisko, sum(s.ocena) as suma
                         from skok s, zgloszenie zg, zawodnik z where s.id_zgloszenia = zg.id_zgloszenia and zg.id_zawodnika = z.id_zawodnika
-                        and zg.id_konkursu = $1 and (s.seria = 'pierwsza' or s.seria = 'druga') and s.ocena is not NULL group by z.id_zawodnika order by suma", array($id_konkursu));
+                        and zg.id_konkursu = $1 and (s.seria = 'pierwsza' or s.seria = 'druga') and s.ocena is not NULL group by z.id_zawodnika order by suma DESC", array($id_konkursu));
                         if (pg_num_rows($query) > 0) {
                             echo "<h2>Klasyfikacja</h2>";
                             echo "<table class='table table-striped table-hover'>";
