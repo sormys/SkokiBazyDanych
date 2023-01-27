@@ -32,8 +32,8 @@ CREATE TABLE Zgloszenie (
 );
 CREATE TABLE Skok (
     id_skoku SERIAL PRIMARY KEY,
-    odleglosc NUMERIC(6),
-    ocena NUMERIC(6),
+    odleglosc NUMERIC(6, 2),
+    ocena NUMERIC(6, 2),
     seria rodzajSerii NOT NULL,
     zdyskwalifikowany BOOLEAN NOT NULL,
     id_zgloszenia INTEGER REFERENCES Zgloszenie,
