@@ -9,7 +9,7 @@ Some technical info:
   (check file varsExample.php).
   
   
-Full assigment explanation in polish below:
+Full assignment in polish below:
 
 >Założenia
 >Uwaga: wszędzie gdzie mowa o zawodnikach, dotyczy to także zawodniczek.
